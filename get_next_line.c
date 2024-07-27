@@ -26,7 +26,7 @@ char	*ft_joinnfree(char *buffer, char *buff)
 	return (join);
 }
 
-//It does the same as cuurent_line but with the next ones.
+//It does the same as current_line but with the next ones.
 char	*ft_next_line(char *buffer)
 {
 	size_t	i;
@@ -47,10 +47,10 @@ char	*ft_next_line(char *buffer)
 		return (NULL);
 	}
 	res = ft_calloc(ft_strlen(buffer) - i + 1, sizeof(char));
+	if (!res)
+		return (NULL);
 	while (buffer[i])
-	{
 		res[j++] = buffer[i++];
-	}
 	free(buffer);
 	return (res);
 }
@@ -69,6 +69,8 @@ char	*ft_current_line(char *buffer)
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
 	line = ft_calloc(i + 2, sizeof(char));
+	if (!line)
+		return (NULL);
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 	{
@@ -76,7 +78,8 @@ char	*ft_current_line(char *buffer)
 		i++;
 	}
 	if (buffer[i] && buffer[i] == '\n')
-		line[i] = '\n';
+		line[i++] = '\n';
+	line[i] = '\0';
 	return (line);
 }
 
@@ -88,9 +91,13 @@ char	*read_file(int fd, char *buffer)
 	//if buffer doesnt exist, allocates 1 byte and initializes it to 0
 	if (!buffer)
 		buffer = ft_calloc(1,1);
+	if (!buffer)
+		return (NULL);
 	//allocates memory for buffer 1, leavinf a space for the null
 	//the buffer is used to read chunks of data from the file
-	buff = ft_calloc(BUFFER_SIZE, sizeof(char));
+	buff = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!buff)
+		return (NULL);
 	//initialized to 1 to enter the loop
 	bytes_read = 1;
 	while (bytes_read > 0)
@@ -105,12 +112,18 @@ char	*read_file(int fd, char *buffer)
 		if (bytes_read == -1)
 		{
 			free(buff);
+			free (buffer);
 			return (NULL);
 		}
 		//0 terminating the buffer cause we're gonna place the null
 		//later ourselves
 		buff[bytes_read] = '\0';
 		buffer = ft_joinnfree(buffer, buff);
+		if (!buffer)
+		{
+			free (buffer);
+			return (NULL);
+		}
 	}
 	free(buff);
 	return (buffer);
@@ -132,7 +145,7 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-#include <stdio.h>
+/*#include <stdio.h>
 
 int	main()
 {
@@ -154,4 +167,4 @@ int	main()
 	close(fd);
 	free(string);
 	return (0);
-}
+}*/

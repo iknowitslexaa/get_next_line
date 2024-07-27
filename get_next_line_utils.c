@@ -39,9 +39,7 @@ int	ft_strlen(const char *s)
 
 	i = 0;
 	while (s[i] != '\0')
-	{
 		i++;
-	}
 	return (i);
 }
 
@@ -65,8 +63,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	size;
 	char	*newstr;
 
+	if (!s1)
+		s1 = calloc(1, sizeof(char));
 	size = ft_strlen(s1) + ft_strlen(s2) + 1;
-	newstr = (char *)malloc(sizeof(char) * size);
+	newstr = ft_calloc(size, sizeof(char));
 	if (newstr == NULL)
 		return (NULL);
 	i = 0;
@@ -76,7 +76,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		newstr[i] = s1[i];
 		i++;
 	}
-	while ((i + c) < size)
+	while ((i + c) < size - 1)
 	{
 		newstr[i + c] = s2[c];
 		c++;
