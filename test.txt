@@ -1,8 +1,0 @@
-Hello, there!
-Seems like you're reading this correctly.
-This is the third line
-and fourth
-Did you get it?
-
-012345678901234567890123456789012345678901
-2

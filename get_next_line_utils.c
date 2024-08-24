@@ -13,12 +13,17 @@
 #include "get_next_line.h"
 #include <stdlib.h>
 
-static void	set_zero(void *ptr, size_t t_size)
+static void	set_zero(void *s, size_t n)
 {
-	while (t_size--)
+	char	*str;
+	size_t	i;
+
+	str = (char *)s;
+	i = 0;
+	while (i < n)
 	{
-		*(unsigned char *)ptr = 0;
-		ptr++;
+		str[i] = '\0';
+		i++;
 	}
 }
 
@@ -26,7 +31,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 {
 	void	*ptr;
 
-	ptr = (void *)malloc(nmemb * size);
+	ptr = malloc(nmemb * size);
 	if (!ptr)
 		return (NULL);
 	set_zero(ptr, nmemb * size);
@@ -38,21 +43,22 @@ int	ft_strlen(const char *s)
 	size_t	i;
 
 	i = 0;
-	while (s[i] != '\0')
+	while (s[i])
 		i++;
 	return (i);
 }
 
 char	*ft_strchr(const char *s, int c)
 {
-	while (*s)
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	if (*s == (char)c)
-		return ((char *)s);
+	char	*str;
+	
+	str = (char *)s;
+	//searches for the character stored in the c variable
+	while (*str != c && *str != 0)
+		str++;
+	//then returns the pointer to that character.
+	if (*str == c)
+		return (str);
 	return (NULL);
 }
 
@@ -63,24 +69,24 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	size_t	size;
 	char	*newstr;
 
-	if (!s1)
-		s1 = calloc(1, sizeof(char));
 	size = ft_strlen(s1) + ft_strlen(s2) + 1;
 	newstr = ft_calloc(size, sizeof(char));
-	if (newstr == NULL)
+	if (!newstr || !s1 || !s2)
 		return (NULL);
 	i = 0;
 	c = 0;
-	while (s1[i] != '\0')
+	//puts the info of the first string in the new string
+	while (s1[i] != 0)
 	{
 		newstr[i] = s1[i];
 		i++;
 	}
+	//puts the info of the second string in the new string
 	while ((i + c) < size - 1)
 	{
 		newstr[i + c] = s2[c];
 		c++;
 	}
-	newstr[i + c] = '\0';
+	newstr[i + c] = 0;
 	return (newstr);
 }
