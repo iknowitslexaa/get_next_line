@@ -102,6 +102,9 @@ char	*read_file(int fd, char *res)
 		if (byte_read == -1)
 		{
 			free(buffer);
+			//This free res will literally avoid leaks
+			//in case of the read function doesnt work
+			free(res);
 			return (NULL);
 		}
 		//instead of having a null terminator we need to put 0 so
@@ -129,7 +132,7 @@ char	*get_next_line(int fd)
 	//by readiing it with 0 bytes, which does not change the 
 	//file pointer or data but will return -1 if the descriptor
 	// is invalid.
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	//reads the data from the file and updates the buffer.
 	buffer = read_file(fd, buffer);
